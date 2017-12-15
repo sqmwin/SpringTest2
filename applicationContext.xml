@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="studentService" class="com.sqm.service.StudentServiceImpl"/>
+    <bean id="teacherService" class="com.sqm.service.TeacherServiceImpl"/>
+
+    <!--定义容器中所有bean的后处理器bean postProcessor ,可以不指定id-->
+    <bean class="com.sqm.processor.MyBeanPostProcessor"/>
+
+    <!--加载bean的初始化方法与销毁方法-->
+    <bean class="com.sqm.service.StudentServiceImpl" id="studentService2" init-method="setUp"
+          destroy-method="tearDown"/>
+</beans>

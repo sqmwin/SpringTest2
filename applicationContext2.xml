@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean class="com.sqm.pojo.School" id="sqmSchool">
+        <property name="name" value="swjtu"/>
+    </bean>
+    <bean class="com.sqm.pojo.School" id="liliSchool">
+        <property name="name" value="scu"/>
+    </bean>
+    <!--设值注入-->
+    <bean class="com.sqm.pojo.Student" id="sqmStudent">
+        <property name="name" value="sqm"/>
+        <property name="age" value="25"/>
+        <property name="school" ref="sqmSchool"/>
+    </bean>
+    <!--构造注入-->
+    <bean class="com.sqm.pojo.Student" id="liliStudent">
+        <constructor-arg name="name" value="lili"/>
+        <constructor-arg name="age" value="25"/>
+        <constructor-arg name="school" ref="liliSchool"/>
+    </bean>
+
+    <!--通过p命名空间注入-->
+    <bean class="com.sqm.pojo.Student" id="sqmStudent2" p:name="sqm2" p:age="25" p:school-ref="sqmSchool"/>
+    <!--通过c命名空间注入-->
+    <bean class="com.sqm.pojo.Student" id="liliStudent2" c:name="lili2" c:age="25" c:school-ref="liliSchool"/>
+
+    <!--集合注入-->
+    <bean class="com.sqm.pojo.MyCollections" id="myCollections">
+        <!--数组-->
+        <property name="strings">
+            <array>
+                <value>a</value>
+                <value>b</value>
+                <value>c</value>
+            </array>
+        </property>
+        <!--list-->
+        <property name="students">
+            <list>
+                <ref bean="sqmStudent"/>
+                <ref bean="sqmStudent2"/>
+                <ref bean="liliStudent"/>
+            </list>
+        </property>
+        <!--set-->
+        <property name="mySet">
+            <set>
+                <value>小学</value>
+                <value>中学</value>
+                <value>大学</value>
+            </set>
+        </property>
+        <!--map-->
+        <property name="myMap">
+            <map>
+                <entry key="height" value="180"/>
+                <entry key="weight" value="80"/>
+            </map>
+        </property>
+        <!--properties-->
+        <property name="properties">
+            <props>
+                <prop key="tel">180</prop>
+                <prop key="address">成都</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--域属性自动注入autowire-->
+    <bean class="com.sqm.pojo.School" id="school" p:name="school">
+    </bean>
+    <!--byName-->
+    <bean class="com.sqm.pojo.Student" id="autowire" autowire="byName">
+        <property name="name" value="autowire"/>
+        <property name="age" value="25"/>
+    </bean>
+    <!--byType:当要注入的域属性只有一个时才能使用byType-->
+    <!--<bean class="com.sqm.pojo.Student" id="autowire2" autowire="byType" p:name="autowire2" p:age="22"/>-->
+
+</beans>

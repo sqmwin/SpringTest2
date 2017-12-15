@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="com.sqm.pojo"/>
+    <bean class="com.sqm.pojo.School" id="school" p:name="university"/>
+    <bean class="com.sqm.pojo.School" id="sqmSchool" p:name="#{school.name.toUpperCase()}"/>
+    <!--spring中的取值可以是SpEL-->
+    <bean id="sqmAsPerson" class="com.sqm.pojo.Person">
+        <property name = "personName" value="sqm"/>
+        <!--personAge的值是Math的静态方法计算后的值-->
+        <property name = "personAge" value="#{T(java.lang.Math).random()*30}"/>
+    </bean>
+    <bean id="sqmAsStudent" class="com.sqm.pojo.Student2">
+        <!--studentName的值为sqmPerson对象的personName值-->
+        <property name = "studentName" value="#{sqmAsPerson.personName}"/>
+        <!--studentAge的值是sqmPerson对象的一个方法-->
+        <property name = "studentAge" value="#{sqmAsPerson.computeAge()}"/>
+        <!--school的值是另一个bean的Id-->
+        <property name="school" value="#{school}"/>
+    </bean>
+    <bean id="sqmAsStudent2" class="com.sqm.pojo.Student2" p:studentName="#{sqmAsStudent.studentName.toUpperCase()}" p:studentAge="#{sqmAsStudent.studentAge}">
+        <property name="school">
+            <!--属性采用内部注入bean-->
+            <bean class="com.sqm.pojo.School">
+                <property name="name" value="swjtu"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!--同类抽象继承bean-->
+    <!--继承此学生类的bean的学校都是swjtu-->
+    <bean class="com.sqm.pojo.Student2" id="studentBase" abstract="true" p:school="swjtu"/>
+    <bean parent="studentBase" id="student1" p:studentName="sqm" p:studentAge="12"/>
+    <bean parent="studentBase" id="student2" p:studentName="lili" p:studentAge="22"/>
+
+
+    <!--异类抽象继承bean-->
+    <!--继承此bean的所有bean对象有着相同的属性(属性值与属性类型都相同)-->
+    <bean id="countryBase" abstract="true">
+        <property name="country" value="CHN"/>
+    </bean>
+    <bean parent="countryBase" class="com.sqm.pojo.Person" id="sqmPerson" p:personName="sqm" p:personAge="12"/>
+    <bean parent="countryBase" class="com.sqm.pojo.Student2" id="sqmStudent" p:studentName="sqm" p:studentAge="23"/>
+</beans>
